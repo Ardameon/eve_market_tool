@@ -22,7 +22,7 @@
      <height>211</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,3,1,0" columnminimumwidth="20,256,64,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,3,1" columnminimumwidth="20,256,64">
     <property name="sizeConstraint">
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
@@ -30,14 +30,14 @@
      <number>10</number>
     </property>
     <item row="1" column="2" rowspan="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="imageLabel">
       <property name="text">
        <string>Pic</string>
       </property>
      </widget>
     </item>
     <item row="2" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="label_3">
+     <widget class="QLabel" name="newlabel">
       <property name="font">
        <font>
         <family>Droid Sans Mono</family>
@@ -50,7 +50,7 @@
      </widget>
     </item>
     <item row="1" column="0" alignment="Qt::AlignRight">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="systemLabel">
       <property name="font">
        <font>
         <family>Droid Sans Mono</family>
@@ -63,7 +63,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLabel" name="label_5">
+     <widget class="QLabel" name="newPriceLabel">
       <property name="font">
        <font>
         <family>Droid Sans Mono</family>
@@ -76,7 +76,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLabel" name="label_4">
+     <widget class="QLabel" name="basePriceLabel">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -107,14 +107,24 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="inputEdit">
       <property name="text">
        <string>Enter module name</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="spinBox"/>
+     <widget class="QSpinBox" name="overPrice">
+      <property name="suffix">
+       <string>%</string>
+      </property>
+      <property name="prefix">
+       <string>+</string>
+      </property>
+      <property name="value">
+       <number>10</number>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="runButton">

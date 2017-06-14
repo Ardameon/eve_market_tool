@@ -22,11 +22,13 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
     
     networkAccess = new QNetworkAccessManager(this);
+
+    priceCheck = new EvePriceCheck(this);
     
     connect(ui->runButton, SIGNAL(clicked(bool)), this, SLOT(run()));
-    connect(networkAccess, SIGNAL(finished(QNetworkReply*)), SLOT(RequestFinished(QNetworkReply*)));
-    connect(ui->inText, SIGNAL(textChanged()), SLOT(inputChanged()));
-    connect(ui->inText, SIGNAL(textChanged()), SLOT(run()));
+//    connect(networkAccess, SIGNAL(finished(QNetworkReply*)), SLOT(RequestFinished(QNetworkReply*)));
+//    connect(ui->inText, SIGNAL(textChanged()), SLOT(inputChanged()));
+//    connect(ui->inText, SIGNAL(textChanged()), SLOT(run()));
 }
 
 Widget::~Widget()
@@ -37,7 +39,22 @@ Widget::~Widget()
 void Widget::run()
 {
     qDebug() << "RUN:" << " " << ui->inText->toPlainText();
-    networkAccess->get(QNetworkRequest(QUrl(ui->inText->toPlainText())));
+//    networkAccess->get(QNetworkRequest(QUrl(ui->inText->toPlainText())));
+
+    if (priceCheck->findResult(ui->inputEdit->text(), ui->overPrice->value()))
+    {
+        return;
+    }
+
+    QString newPrice(priceCheck->getNewPrice());
+    QString basePrice(priceCheck->getBasePrice());
+
+    ui->basePriceLabel->setText(basePrice + " ISK");
+    ui->newPriceLabel->setText(newPrice + " ISK");
+    ui->imageLabel->setPixmap(priceCheck->getPicture());
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(newPrice);
 }
 
 void Widget::RequestFinished(QNetworkReply *reply)
@@ -72,7 +89,7 @@ void Widget::RequestFinished(QNetworkReply *reply)
         scene.addItem(&pixItem);
         ui->graphicsView->setScene(&scene);
         ui->graphicsView->show();
-        ui->label->setPixmap(pix);
+//        ui->label->setPixmap(pix);
 
         QXmlStreamReader xmlReader(byteArray);
 
@@ -138,5 +155,207 @@ bool Widget::eventFilter(QObject *watched, QEvent *event)
 //    	return false;
 //    }
     return true;
+}
+
+EvePriceCheck::EvePriceCheck(QObject *parent) :
+    QObject(parent)
+{
+    networkAccess = new QNetworkAccessManager(this);
+
+}
+
+EvePriceCheck::~EvePriceCheck()
+{
+}
+
+int EvePriceCheck::findResult(const QString &itemName, qint8 percent)
+{
+    QNetworkReply *reply;
+    QNetworkRequest request;
+    QUrl redirect;
+    QByteArray byteArr;
+
+    typeName = itemName;
+
+    QUrl url = QUrl(getIdURL + typeName.replace(' ', '+'));
+
+    qDebug() << "Url " << url.toString();
+
+    request = QNetworkRequest(QUrl(getIdURL + typeName.replace(' ', '+')));
+    while (1)
+    {
+        reply = networkAccess->get(request);
+
+        if (reply->error() != QNetworkReply::NoError)
+        {
+            qDebug() << "Get typeID error: " << reply->errorString();
+            return -1;
+        }
+
+        redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+
+        if(!redirect.isValid() || reply->url() == redirect)
+        {
+            break;
+        }
+
+        if(redirect.isRelative())
+            redirect = reply->url().resolved(redirect);
+
+        request = QNetworkRequest(redirect);
+    }
+
+    byteArr = reply->readAll();
+
+    qDebug() << "Reply: " << QString(byteArr);
+
+    if (findTypeId(byteArr))
+    {
+        return -2;
+    }
+
+    request = QNetworkRequest(QUrl(getPriceURL + typeID));
+    while (1)
+    {
+        reply = networkAccess->get(request);
+
+        if (reply->error() != QNetworkReply::NoError)
+        {
+            qDebug() << "Get Price error: " << reply->errorString();
+            return -3;
+        }
+
+        redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+
+        if(!redirect.isValid() || reply->url() == redirect)
+        {
+            break;
+        }
+
+        if(redirect.isRelative())
+            redirect = reply->url().resolved(redirect);
+
+        request = QNetworkRequest(redirect);
+    }
+
+    byteArr = reply->readAll();
+
+    if (findPrices(byteArr, percent))
+    {
+        return -4;
+    }
+
+    request = QNetworkRequest(QUrl(getImageURL + typeID + QString("_64.png")));
+    while (1)
+    {
+        reply = networkAccess->get(request);
+
+        if (reply->error() != QNetworkReply::NoError)
+        {
+            qDebug() << "Get Picture error: " << reply->errorString();
+            return -3;
+        }
+
+        redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+
+        if(!redirect.isValid() || reply->url() == redirect)
+        {
+            break;
+        }
+
+        if(redirect.isRelative())
+            redirect = reply->url().resolved(redirect);
+
+        request = QNetworkRequest(redirect);
+    }
+
+    findPicture(byteArr);
+
+    return 0;
+}
+
+QString EvePriceCheck::getBasePrice()
+{
+    return QString::number(basePrice, 'f', 2);
+}
+
+QString EvePriceCheck::getNewPrice()
+{
+    return QString::number(newPrice, 'f', 2);
+}
+
+QPixmap EvePriceCheck::getPicture()
+{
+    return picture;
+}
+
+int EvePriceCheck::findTypeId(QByteArray &byteArr)
+{
+    QJsonDocument jdoc = QJsonDocument::fromBinaryData(byteArr);
+    QJsonObject jobj;
+    QJsonArray jarr;
+    QJsonValue jvalue;
+
+    if (jdoc.isNull() || !jdoc.isArray())
+    {
+        qDebug() << "Jdoc is NULL";
+        return -1;
+    }
+
+    jarr = jdoc.array();
+
+    if (!jarr.size())
+    {
+        qDebug() << "Jarr is empty";
+        return -2;
+    }
+
+    jvalue = jobj.value("typeID");
+
+    if (jvalue.isNull())
+    {
+        qDebug() << "Can't find typeID in Json";
+        return -3;
+    }
+
+    typeID = jvalue.toString();
+
+    return 0;
+}
+
+int EvePriceCheck::findPrices(QByteArray &byteArr, quint8 percent)
+{
+    QXmlStreamReader xmlReader(byteArr);
+
+    while (!xmlReader.atEnd())
+    {
+        xmlReader.readNext();
+        if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "sell")
+        {
+            xmlReader.readNext();
+            while (!xmlReader.tokenType() != QXmlStreamReader::StartElement && xmlReader.name() != "percentile")
+            {
+                xmlReader.readNext();
+            }
+
+            xmlReader.readNext();
+
+            basePrice = xmlReader.text().toDouble();
+            newPrice = basePrice * (1.0 + (0.01 * percent));
+
+            return 0;
+        }
+    }
+
+    qDebug() << "Can't find price in XML";
+
+    return -1;
+}
+
+int EvePriceCheck::findPicture(QByteArray &byteArr)
+{
+    picture.loadFromData(byteArr);
+
+    return 0;
 }
 
