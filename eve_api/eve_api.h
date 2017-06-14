@@ -23,6 +23,7 @@ public slots:
     void run();
     void RequestFinished(QNetworkReply *reply);
     void inputChanged();
+    void showResult();
     
 private:
     Ui::Widget *ui;
@@ -47,28 +48,42 @@ class EvePriceCheck : public QObject
 public:
     EvePriceCheck(QObject *parent = 0);
     ~EvePriceCheck();
-
-
-
-public:
     int findResult(const QString &itemName, qint8 perncent);
     QString getBasePrice();
     QString getNewPrice();
     QPixmap getPicture();
+
+    typedef enum {
+        STATE_START,
+        STATE_GET_ID,
+        STATE_GET_PRICES,
+        STATE_GET_PIC
+    } ePriceCheckState;
+
+public slots:
+    void redirectionCheck(QNetworkReply *reply);
+
+
 
 
 
 private:
     QNetworkAccessManager *networkAccess;
     QString typeName;
+    qint8 pricePercent;
     QString typeID;
     double basePrice;
     double newPrice;
     QPixmap picture;
+    ePriceCheckState state;
 
     int findTypeId(QByteArray &byteArr);
-    int findPrices(QByteArray &byteArr, quint8 percent);
+    int findPrices(QByteArray &byteArr);
     int findPicture(QByteArray &byteArr);
+    void getNext();
+
+signals:
+    void finished();
 
 
 };
