@@ -18,3 +18,6 @@ SOURCES += main.cpp\
 HEADERS  += eve_api.h
 
 FORMS    += widget.ui
+
+RESOURCES += \
+    icons.qrc

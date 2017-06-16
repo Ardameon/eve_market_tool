@@ -21,16 +21,16 @@ public:
     
 public slots:
     void run();
-    void RequestFinished(QNetworkReply *reply);
-    void inputChanged();
-    void showResult();
+    void showResult(bool success);
     
 private:
     Ui::Widget *ui;
-    QNetworkAccessManager *networkAccess;
     EvePriceCheck *priceCheck;
+
     bool eventFilter(QObject *watched, QEvent *event);
-    
+
+signals:
+    void enterPressed();
 };
 
 
@@ -83,7 +83,8 @@ private:
     void getNext();
 
 signals:
-    void finished();
+    void finished(bool success);
+    void progress(int i);
 
 
 };
