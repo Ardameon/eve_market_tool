@@ -25,27 +25,12 @@ Widget::Widget(QWidget *parent) :
     priceCheck = new EvePriceCheck(this);
     
     connect(ui->runButton, SIGNAL(clicked(bool)), SLOT(run()));
-//    connect(this, SIGNAL(enterPressed()), SLOT(run()));
     connect(this, SIGNAL(enterPressed()), ui->runButton, SLOT(click()));
     connect(ui->runButton, SIGNAL(clicked(bool)), ui->progressBar, SLOT(show()));
     connect(priceCheck, SIGNAL(finished(bool)), SLOT(showResult(bool)));
     connect(priceCheck, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
-//    connect(priceCheck, SIGNAL(finished()), ui->progressBar, SLOT(hide()));
-//    connect(priceCheck, SIGNAL(finished()), ui->progressBar, SLOT(setMinimum(int)));
-//    connect(networkAccess, SIGNAL(finished(QNetworkReply*)), SLOT(RequestFinished(QNetworkReply*)));
-//    connect(ui->inText, SIGNAL(textChanged()), SLOT(inputChanged()));
-//    connect(ui->inText, SIGNAL(textChanged()), SLOT(run()));
 
     ui->inputEdit->installEventFilter(this);
-
-    QStringList list;
-    list << "FIrst item";
-    list << "Second item";
-    list << "third item";
-    list << "fa item";
-
-    ui->comboBox->addItems(list);
-    ui->comboBox->addItem("TTESX");
 }
 
 Widget::~Widget()
@@ -55,8 +40,16 @@ Widget::~Widget()
 
 void Widget::run()
 {
+    QString input = ui->inputEdit->text();
+    int i;
 
-    if (priceCheck->findResult(ui->inputEdit->text(), ui->overPrice->value()))
+    for (i = 0; i < input.length(); i++)
+    {
+        if (input[i] != ' ') break;
+    }
+    input.remove(0, i);
+
+    if (priceCheck->findResult(input, ui->overPrice->value()))
     {
         return;
     }
@@ -94,7 +87,7 @@ bool Widget::eventFilter(QObject *watched, QEvent *event)
         case QEvent::FocusOut:
             if (watched == ui->inputEdit)
             {
-//                ui->inputEdit->setFocus();
+                ui->inputEdit->setFocus();
                 ui->inputEdit->selectAll();
 
                 return true;
@@ -278,7 +271,8 @@ int EvePriceCheck::findPrices(QByteArray &byteArr)
         if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "sell")
         {
             xmlReader.readNext();
-            while (!xmlReader.tokenType() != QXmlStreamReader::StartElement && xmlReader.name() != "percentile")
+
+            while ((xmlReader.tokenType() != QXmlStreamReader::StartElement) || (xmlReader.name().toString() != "percentile"))
             {
                 xmlReader.readNext();
             }

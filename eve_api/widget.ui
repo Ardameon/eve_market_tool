@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>Widget</class>
  <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>464</width>
+    <height>186</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>464</width>
@@ -21,20 +29,7 @@
    <iconset resource="icons.qrc">
     <normaloff>:/icons/6_64_3.png</normaloff>:/icons/6_64_3.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0,0">
-   <item>
-    <widget class="QComboBox" name="comboBox">
-     <property name="editable">
-      <bool>true</bool>
-     </property>
-     <property name="currentIndex">
-      <number>-1</number>
-     </property>
-     <property name="modelColumn">
-      <number>0</number>
-     </property>
-    </widget>
-   </item>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,0,1">
      <item>
