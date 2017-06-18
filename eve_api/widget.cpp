@@ -59,19 +59,32 @@ void Widget::run()
 
 void Widget::showResult(bool success)
 {
-    QString newPrice(priceCheck->getNewPrice());
-    QString basePrice(priceCheck->getBasePrice());
+    QString newPrice(priceCheck->getNewPriceStr());
+    QString basePrice(priceCheck->getBasePriceStr());
+    QString buyPrice(priceCheck->getBuyPriceStr());
 
     if (success)
     {
         ui->basePriceLabel->setText(basePrice + " ISK");
+        ui->buyPriceLabel->setText(buyPrice + " ISK");
         ui->newPriceLabel->setText(newPrice + " ISK");
         ui->imageLabel->setPixmap(priceCheck->getPicture());
+        ui->diffLabel->setText(priceCheck->getDiffPercentStr());
     } else {
         ui->basePriceLabel->setText("Error");
+        ui->buyPriceLabel->setText("Error");
         ui->newPriceLabel->setText("Error");
+        ui->diffLabel->clear();
         ui->imageLabel->clear();
     }
+
+    if (priceCheck->getDiffPercent() <= 15.0)
+    {
+        ui->diffLabel->setStyleSheet("QLabel { color : green; }");
+    } else {
+        ui->diffLabel->setStyleSheet("QLabel { color : red; }");
+    }
+
 
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(newPrice);

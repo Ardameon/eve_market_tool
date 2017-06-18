@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>464</width>
-    <height>186</height>
+    <height>233</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -19,7 +19,7 @@
   <property name="maximumSize">
    <size>
     <width>464</width>
-    <height>186</height>
+    <height>250</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
    <iconset resource="icons.qrc">
     <normaloff>:/icons/6_64_3.png</normaloff>:/icons/6_64_3.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,0,1">
      <item>
@@ -62,47 +62,14 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,3,1" columnminimumwidth="20,256,64">
+    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0" columnstretch="0,25,0" columnminimumwidth="0,0,90">
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
      <property name="leftMargin">
       <number>10</number>
      </property>
-     <item row="1" column="2" rowspan="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-      <widget class="QLabel" name="imageLabel">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" alignment="Qt::AlignRight">
-      <widget class="QLabel" name="newlabel">
-       <property name="font">
-        <font>
-         <family>Droid Sans Mono</family>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>New: </string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" alignment="Qt::AlignRight">
-      <widget class="QLabel" name="systemLabel">
-       <property name="font">
-        <font>
-         <family>Droid Sans Mono</family>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Jita: </string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="QLabel" name="newPriceLabel">
        <property name="enabled">
         <bool>true</bool>
@@ -115,12 +82,15 @@
        </property>
        <property name="font">
         <font>
-         <family>Droid Sans Mono</family>
+         <family>Sans Serif</family>
          <pointsize>16</pointsize>
         </font>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse</set>
        </property>
       </widget>
      </item>
@@ -134,7 +104,120 @@
        </property>
        <property name="font">
         <font>
-         <family>Droid Sans Mono</family>
+         <family>Sans Serif</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="buyPriceLabel">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Sans Serif</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" alignment="Qt::AlignRight">
+      <widget class="QLabel" name="systemLabel">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Sans Serif</family>
+         <pointsize>16</pointsize>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>Jita sell: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" alignment="Qt::AlignRight">
+      <widget class="QLabel" name="jitaBuyLabel">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Jita buy: </string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" alignment="Qt::AlignRight">
+      <widget class="QLabel" name="newlabel">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Sans Serif</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>New: </string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2" rowspan="2">
+      <widget class="QLabel" name="imageLabel">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="diffLabel">
+       <property name="font">
+        <font>
          <pointsize>16</pointsize>
         </font>
        </property>
@@ -164,7 +247,7 @@
       <bool>true</bool>
      </property>
      <property name="maximum">
-      <number>3</number>
+      <number>4</number>
      </property>
      <property name="value">
       <number>0</number>

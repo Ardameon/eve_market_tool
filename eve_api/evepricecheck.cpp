@@ -45,16 +45,30 @@ int EvePriceCheck::findResult(const QString &itemName, qint8 percent)
 
 /*====================================================================================================================*/
 
-QString EvePriceCheck::getBasePrice()
+QString EvePriceCheck::getBasePriceStr()
 {
     return QString::number(basePrice, 'f', 2);
 }
 
 /*====================================================================================================================*/
 
-QString EvePriceCheck::getNewPrice()
+QString EvePriceCheck::getNewPriceStr()
 {
     return QString::number(newPrice, 'f', 2);
+}
+
+/*====================================================================================================================*/
+
+QString EvePriceCheck::getBuyPriceStr()
+{
+    return QString::number(buyPrice, 'f', 2);
+}
+
+/*====================================================================================================================*/
+
+QString EvePriceCheck::getDiffPercentStr()
+{
+    return QString::number(sellBuyDiff, 'f', 2) + " %";
 }
 
 /*====================================================================================================================*/
@@ -62,6 +76,34 @@ QString EvePriceCheck::getNewPrice()
 QPixmap EvePriceCheck::getPicture()
 {
     return picture;
+}
+
+/*====================================================================================================================*/
+
+double EvePriceCheck::getBasePrice()
+{
+    return basePrice;
+}
+
+/*====================================================================================================================*/
+
+double EvePriceCheck::getNewPrice()
+{
+    return newPrice;
+}
+
+/*====================================================================================================================*/
+
+double EvePriceCheck::getBuyPrice()
+{
+    return buyPrice;
+}
+
+/*====================================================================================================================*/
+
+double EvePriceCheck::getDiffPercent()
+{
+    return sellBuyDiff;
 }
 
 /*====================================================================================================================*/
@@ -175,7 +217,23 @@ int EvePriceCheck::findPrices(QByteArray &byteArr)
     while (!xmlReader.atEnd())
     {
         xmlReader.readNext();
-        if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "sell")
+        if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "buy")
+        {
+            xmlReader.readNext();
+
+            while ((xmlReader.tokenType() != QXmlStreamReader::StartElement)
+                   || (xmlReader.name().toString() != "percentile"))
+            {
+                xmlReader.readNext();
+            }
+
+            xmlReader.readNext();
+
+            buyPrice = xmlReader.text().toDouble();
+
+            emit progress(2);
+
+        } else if (xmlReader.tokenType() == QXmlStreamReader::StartElement && xmlReader.name() == "sell")
         {
             xmlReader.readNext();
 
@@ -190,7 +248,14 @@ int EvePriceCheck::findPrices(QByteArray &byteArr)
             basePrice = xmlReader.text().toDouble();
             newPrice = basePrice * (1.0 + (0.01 * pricePercent));
 
-            emit progress(2);
+            if (basePrice > 0.01)
+            {
+                sellBuyDiff = (basePrice - buyPrice) / basePrice * 100.0;
+            } else {
+                sellBuyDiff = -100.0;
+            }
+
+            emit progress(3);
 
             return 0;
         }
@@ -207,7 +272,7 @@ int EvePriceCheck::findPicture(QByteArray &byteArr)
 {
     picture.loadFromData(byteArr);
 
-    emit progress(3);
+    emit progress(4);
 
     return 0;
 }

@@ -22,9 +22,16 @@ public:
     EvePriceCheck(QObject *parent = 0);
     ~EvePriceCheck();
     int findResult(const QString &itemName, qint8 perncent);
-    QString getBasePrice();
-    QString getNewPrice();
+    QString getBasePriceStr();
+    QString getNewPriceStr();
+    QString getBuyPriceStr();
+    QString getDiffPercentStr();
     QPixmap getPicture();
+
+    double getBasePrice();
+    double getNewPrice();
+    double getBuyPrice();
+    double getDiffPercent();
 
     typedef enum {
         STATE_START,
@@ -41,6 +48,8 @@ private:
     QString typeName;
     qint8 pricePercent;
     QString typeID;
+    double buyPrice;
+    double sellBuyDiff;
     double basePrice;
     double newPrice;
     QPixmap picture;
