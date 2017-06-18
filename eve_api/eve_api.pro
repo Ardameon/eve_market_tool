@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widget.cpp
+        widget.cpp \
+    evepricecheck.cpp
 
-HEADERS  += eve_api.h
+HEADERS  += eve_api.h \
+    evepricecheck.h
 
 FORMS    += widget.ui
 
