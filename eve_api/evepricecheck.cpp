@@ -21,9 +21,13 @@ EvePriceCheck::EvePriceCheck(QObject *parent) :
 
 }
 
+/*====================================================================================================================*/
+
 EvePriceCheck::~EvePriceCheck()
 {
 }
+
+/*====================================================================================================================*/
 
 int EvePriceCheck::findResult(const QString &itemName, qint8 percent)
 {
@@ -39,20 +43,28 @@ int EvePriceCheck::findResult(const QString &itemName, qint8 percent)
     return 0;
 }
 
+/*====================================================================================================================*/
+
 QString EvePriceCheck::getBasePrice()
 {
     return QString::number(basePrice, 'f', 2);
 }
+
+/*====================================================================================================================*/
 
 QString EvePriceCheck::getNewPrice()
 {
     return QString::number(newPrice, 'f', 2);
 }
 
+/*====================================================================================================================*/
+
 QPixmap EvePriceCheck::getPicture()
 {
     return picture;
 }
+
+/*====================================================================================================================*/
 
 void EvePriceCheck::redirectionCheck(QNetworkReply *reply)
 {
@@ -112,6 +124,8 @@ void EvePriceCheck::redirectionCheck(QNetworkReply *reply)
     }
 }
 
+/*====================================================================================================================*/
+
 int EvePriceCheck::findTypeId(QByteArray &byteArr)
 {
     QJsonDocument jdoc = QJsonDocument::fromJson(byteArr);
@@ -152,6 +166,8 @@ int EvePriceCheck::findTypeId(QByteArray &byteArr)
     return 0;
 }
 
+/*====================================================================================================================*/
+
 int EvePriceCheck::findPrices(QByteArray &byteArr)
 {
     QXmlStreamReader xmlReader(byteArr);
@@ -163,7 +179,8 @@ int EvePriceCheck::findPrices(QByteArray &byteArr)
         {
             xmlReader.readNext();
 
-            while ((xmlReader.tokenType() != QXmlStreamReader::StartElement) || (xmlReader.name().toString() != "percentile"))
+            while ((xmlReader.tokenType() != QXmlStreamReader::StartElement)
+                   || (xmlReader.name().toString() != "percentile"))
             {
                 xmlReader.readNext();
             }
@@ -184,6 +201,8 @@ int EvePriceCheck::findPrices(QByteArray &byteArr)
     return -1;
 }
 
+/*====================================================================================================================*/
+
 int EvePriceCheck::findPicture(QByteArray &byteArr)
 {
     picture.loadFromData(byteArr);
@@ -192,6 +211,8 @@ int EvePriceCheck::findPicture(QByteArray &byteArr)
 
     return 0;
 }
+
+/*====================================================================================================================*/
 
 void EvePriceCheck::getNext()
 {
