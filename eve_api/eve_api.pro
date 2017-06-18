@@ -21,3 +21,5 @@ FORMS    += widget.ui
 
 RESOURCES += \
     icons.qrc
+
+win32:RC_ICONS += icons/6_64_3.ico
