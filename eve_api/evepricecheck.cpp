@@ -54,7 +54,7 @@ QString EvePriceCheck::getBasePriceStr()
 
 QString EvePriceCheck::getNewPriceStr()
 {
-    return QString::number(newPrice, 'f', 2);
+    return QString::number(newPrice, 'f', 0);
 }
 
 /*====================================================================================================================*/
