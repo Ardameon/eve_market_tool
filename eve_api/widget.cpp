@@ -49,6 +49,13 @@ void Widget::run()
     }
     input.remove(0, i);
 
+    if (ui->rbESI->isChecked())
+    {
+        priceCheck->setSource(EvePriceCheck::SOURCE_ESI);
+    } else {
+        priceCheck->setSource(EvePriceCheck::SOURCE_EVE_CENTRAL);
+    }
+
     if (priceCheck->findResult(input, ui->overPrice->value()))
     {
         return;

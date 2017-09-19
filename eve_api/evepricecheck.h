@@ -16,7 +16,8 @@ class EvePriceCheck : public QObject
     Q_OBJECT
     const QString getIdURL = QString("https://www.fuzzwork.co.uk/api/typeid2.php?typename=");
     const QString getImageURL = QString("https://image.eveonline.com/Type/");
-    const QString getPriceURL = QString("http://api.eve-central.com/api/marketstat?usesystem=30000142&typeid=");
+    const QString getPriceURLEveC = QString("http://api.eve-central.com/api/marketstat?usesystem=30000142&typeid=");
+    const QString getPriceURLESI = QString("https://esi.tech.ccp.is/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=");
 
 public:
     EvePriceCheck(QObject *parent = 0);
@@ -40,6 +41,13 @@ public:
         STATE_GET_PIC
     } ePriceCheckState;
 
+    typedef enum {
+        SOURCE_EVE_CENTRAL,
+        SOURCE_ESI
+    } ePriceCheckSrc;
+
+    void setSource(ePriceCheckSrc source);
+
 public slots:
     void redirectionCheck(QNetworkReply *reply);
 
@@ -54,9 +62,11 @@ private:
     double newPrice;
     QPixmap picture;
     ePriceCheckState state;
+    ePriceCheckSrc priceSource;
 
     int findTypeId(QByteArray &byteArr);
-    int findPrices(QByteArray &byteArr);
+    int findPricesEveCentral(QByteArray &byteArr);
+    int findPricesESI(QByteArray &byteArr);
     int findPicture(QByteArray &byteArr);
     void getNext();
 
