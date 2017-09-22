@@ -47,6 +47,7 @@ public:
     } ePriceCheckSrc;
 
     void setSource(ePriceCheckSrc source);
+    void setESIPrecision(quint8 precision);
 
 public slots:
     void redirectionCheck(QNetworkReply *reply);
@@ -63,6 +64,7 @@ private:
     QPixmap picture;
     ePriceCheckState state;
     ePriceCheckSrc priceSource;
+    quint8 pricePrecision;
 
     int findTypeId(QByteArray &byteArr);
     int findPricesEveCentral(QByteArray &byteArr);

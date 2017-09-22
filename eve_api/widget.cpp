@@ -26,6 +26,8 @@ Widget::Widget(QWidget *parent) :
     connect(ui->runButton, SIGNAL(clicked(bool)), ui->progressBar, SLOT(show()));
     connect(priceCheck, SIGNAL(finished(bool)), SLOT(showResult(bool)));
     connect(priceCheck, SIGNAL(progress(int)), ui->progressBar, SLOT(setValue(int)));
+    connect(ui->rbESI, SIGNAL(toggled(bool)), ui->sellOrdersPrecision, SLOT(setEnabled(bool)));
+    connect(ui->rbESI, SIGNAL(toggled(bool)), ui->precisionLabel, SLOT(setEnabled(bool)));
 
     ui->inputEdit->installEventFilter(this);
     ui->progressBar->hide();
@@ -52,6 +54,7 @@ void Widget::run()
     if (ui->rbESI->isChecked())
     {
         priceCheck->setSource(EvePriceCheck::SOURCE_ESI);
+        priceCheck->setESIPrecision(ui->sellOrdersPrecision->value());
     } else {
         priceCheck->setSource(EvePriceCheck::SOURCE_EVE_CENTRAL);
     }

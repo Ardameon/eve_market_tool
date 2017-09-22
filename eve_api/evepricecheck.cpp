@@ -52,6 +52,13 @@ void EvePriceCheck::setSource(EvePriceCheck::ePriceCheckSrc source)
 
 /*====================================================================================================================*/
 
+void EvePriceCheck::setESIPrecision(quint8 precision)
+{
+    pricePrecision = precision;
+}
+
+/*====================================================================================================================*/
+
 QString EvePriceCheck::getBasePriceStr()
 {
     return QString::number(basePrice, 'f', 2);
@@ -293,8 +300,8 @@ int EvePriceCheck::findPricesESI(QByteArray &byteArr)
     QJsonValue location_id;
     QVector<double> sell_prices;
     QVector<double> buy_prices;
+    QVector<double>::iterator iter;
     const int jita_4_4_loc_id = 60003760;
-    const int prefer_precision = 5;
     int i, precision;
 
     if (jdoc.isNull() || !jdoc.isArray())
@@ -336,7 +343,7 @@ int EvePriceCheck::findPricesESI(QByteArray &byteArr)
     basePrice = buyPrice = 0.0;
 
     /* Find SELL price */
-    precision = sell_prices.size() < prefer_precision ? sell_prices.size() : prefer_precision;
+    precision = sell_prices.size() < pricePrecision ? sell_prices.size() : pricePrecision;
     for (i = 0; i < precision; i++)
     {
         basePrice += sell_prices.at(i);
@@ -345,14 +352,9 @@ int EvePriceCheck::findPricesESI(QByteArray &byteArr)
     if (precision) basePrice /= precision;
     newPrice = basePrice * (1.0 + (0.01 * pricePercent));
 
-    /* Find BUY price */
-    precision = buy_prices.size() < prefer_precision ? buy_prices.size() : prefer_precision;
-    for (i = buy_prices.size() - 1; i > buy_prices.size() - precision - 1; i--)
-    {
-        buyPrice += buy_prices.at(i);
-    }
-
-    if (precision) buyPrice /= precision;
+    /* Find the greatest BUY price */
+    iter = buy_prices.end() - 1;
+    buyPrice = *iter;
 
     /* Find difference */
     if (basePrice > 0.01)
