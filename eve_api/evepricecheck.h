@@ -17,8 +17,9 @@ class EvePriceCheck : public QObject
     const QString getIdURL = QString("https://www.fuzzwork.co.uk/api/typeid2.php?typename=");
     const QString getImageURL = QString("https://image.eveonline.com/Type/");
     const QString getPriceURLEveC = QString("http://api.eve-central.com/api/marketstat?usesystem=30000142&typeid=");
-    const QString getPriceURLESI = QString("https://esi.tech.ccp.is/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=");
-
+//     const QString getPriceURLESI = QString("https://esi.tech.ccp.is/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=");
+    const QString getPriceURLESI = QString("https://esi.evetech.net/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=");
+    
 public:
     EvePriceCheck(QObject *parent = 0);
     ~EvePriceCheck();
